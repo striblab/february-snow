@@ -1,3 +1,7 @@
+mkdir -p raw && \
+mkdir -p tmp && \
+mkdir -p final && \
+
 echo 'Step 1 of 7: Scraping snowfall totals for February 2019 ...' && \
 python ./_scrape.py && \
 
@@ -21,5 +25,5 @@ mapshaper ./final/snow-grid-nonull.json -quiet -filter 'max < 30' -o ./final/les
 mapshaper ./final/snow-grid-nonull.json -quiet -filter 'max >= 30' -o ./final/more-than-msp.json && \
 
 echo 'Step 7 of 7: Making tiles ...' && \
-tippecanoe -o ./final/more-than-msp.mbtiles --generate-ids ./more-than-msp.json &&
-tippecanoe -o ./final/less-than-msp.mbtiles --generate-ids ./less-than-msp.json
+tippecanoe -o ./final/more-than-msp.mbtiles --generate-ids ./final/more-than-msp.json &&
+tippecanoe -o ./final/less-than-msp.mbtiles --generate-ids ./final/less-than-msp.json
