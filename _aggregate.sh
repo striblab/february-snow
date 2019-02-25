@@ -1,7 +1,7 @@
-# # aggregate.sh
+# aggregate.sh
 
-# # Combines multiple 24-hour accumulation rasters from February into a single 
-# # file representing total accumulation for the month.
+# Combines multiple 24-hour accumulation rasters from February into a single 
+# file representing total accumulation for the month.
 
 declare -a arr=("2018" "2017" "2016" "2015" "2014")
 
@@ -53,7 +53,7 @@ do
       -C "./raw/sfav2_CONUS_24h_"$i"0228"$h".tif" \
       -D "./raw/sfav2_CONUS_24h_"$i"0229"$h".tif" \
       --outfile=./tmp/"$i"aggregate.tmp.tif \
-      --calc="A+B+C" \
+      --calc="A+B+C+D" \
       --NoDataValue=0
   else
     gdal_calc.py \
@@ -65,12 +65,17 @@ do
       --NoDataValue=0 
   fi
 
-  gdalwarp -srcnodata "3.40282346600000016e+38" -dstnodata "0" ./tmp/"$i"aggregate.tmp.tif ./tmp/"$i"aggregate.tmp.tif
+  gdalwarp -srcnodata "-2819971.75" -dstnodata "0" ./tmp/"$i"aggregate.tmp.tif ./tmp/"$i"aggregate.tmp.tif
 done
 
 gdal_calc.py \
-  -A "./tmp/2018aggregate.tmp.tif"  \
-  -B "./tmp/2017aggregate.tmp.tif"  \
+  -A "./tmp/2018aggregate.tmp.tif" \
+  -B "./tmp/2017aggregate.tmp.tif" \
+  -C "./tmp/2016aggregate.tmp.tif" \
+  -D "./tmp/2015aggregate.tmp.tif" \
+  -E "./tmp/2014aggregate.tmp.tif" \
   --outfile=./tmp/5year_aggregate.tif \
-  --calc="(A+B)/2" \
+  --calc="(A+B+C+D+E)/5" \
   --NoDataValue=0   
+
+# --calc="median([A,B,C,D,E], 0)" \
