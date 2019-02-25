@@ -11,12 +11,12 @@ from rasterstats import zonal_stats
 
 with fiona.open('./hexes/us-grid.shp') as src:
     stats = zonal_stats(src,
-        "tmp/aggregate.tif",
+        "tmp/5year_aggregate.tif",
         stats="max",
         geojson_out=True,
         nodata=0.0)
 
     result = {"type": "FeatureCollection", "features": stats}
 
-    with open('./final/snow-grid-full.json', 'w') as f:
+    with open('./final/snow-grid-full-2014-2018.json', 'w') as f:
         json.dump(result, f)

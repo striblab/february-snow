@@ -8,18 +8,18 @@ gdalwarp \
   -t_srs "EPSG:4326" \
   -srcnodata "-99999" \
   -dstnodata "None" \
-  ./tmp/aggregate.tif ./tmp/proj.tif;
+  ./tmp/5year_aggregate.tif ./tmp/proj.tif;
 
 # Make version for places with more snow than MN
 gdaldem color-relief \
   ./tmp/proj.tif \
   ./color-ramp-more.txt \
-  ./tmp/more_than_msp.tif;
+  ./tmp/more_than_msp-2014-2018.tif;
 
 # Make version for places with less snow than MN
 gdaldem color-relief \
   ./tmp/proj.tif \
   ./color-ramp-less.txt \
-  ./tmp/less_than_msp.tif;
+  ./tmp/less_than_msp-2014-2018.tif;
 
 rm ./tmp/proj.tif;

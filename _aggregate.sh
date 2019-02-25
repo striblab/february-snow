@@ -1,51 +1,76 @@
-# aggregate.sh
+# # aggregate.sh
 
-# Combines multiple 24-hour accumulation rasters from February into a single 
-# file representing total accumulation for the month.
+# # Combines multiple 24-hour accumulation rasters from February into a single 
+# # file representing total accumulation for the month.
 
-# Combine the first handful of files into a single aggregate
+declare -a arr=("2018" "2017" "2016" "2015" "2014")
+
+for i in "${arr[@]}"
+do
+
+  if [ $i == "2017" ] || [ $i == "2018" ]; then
+    h="00"
+  else
+    h="12"
+  fi
+
+  # Combine the first handful of files into a single aggregate
+  gdal_calc.py \
+    -A "./raw/sfav2_CONUS_24h_"$i"0201"$h".tif" \
+    -B "./raw/sfav2_CONUS_24h_"$i"0202"$h".tif" \
+    -C "./raw/sfav2_CONUS_24h_"$i"0203"$h".tif" \
+    -D "./raw/sfav2_CONUS_24h_"$i"0204"$h".tif" \
+    -E "./raw/sfav2_CONUS_24h_"$i"0205"$h".tif" \
+    -F "./raw/sfav2_CONUS_24h_"$i"0206"$h".tif" \
+    -G "./raw/sfav2_CONUS_24h_"$i"0207"$h".tif" \
+    -H "./raw/sfav2_CONUS_24h_"$i"0208"$h".tif" \
+    -I "./raw/sfav2_CONUS_24h_"$i"0209"$h".tif" \
+    -J "./raw/sfav2_CONUS_24h_"$i"0210"$h".tif" \
+    -K "./raw/sfav2_CONUS_24h_"$i"0211"$h".tif" \
+    -L "./raw/sfav2_CONUS_24h_"$i"0212"$h".tif" \
+    -M "./raw/sfav2_CONUS_24h_"$i"0213"$h".tif" \
+    -N "./raw/sfav2_CONUS_24h_"$i"0214"$h".tif" \
+    -O "./raw/sfav2_CONUS_24h_"$i"0215"$h".tif" \
+    -P "./raw/sfav2_CONUS_24h_"$i"0216"$h".tif" \
+    -Q "./raw/sfav2_CONUS_24h_"$i"0217"$h".tif" \
+    -R "./raw/sfav2_CONUS_24h_"$i"0218"$h".tif" \
+    -S "./raw/sfav2_CONUS_24h_"$i"0219"$h".tif" \
+    -T "./raw/sfav2_CONUS_24h_"$i"0220"$h".tif" \
+    -U "./raw/sfav2_CONUS_24h_"$i"0221"$h".tif" \
+    -V "./raw/sfav2_CONUS_24h_"$i"0222"$h".tif" \
+    -W "./raw/sfav2_CONUS_24h_"$i"0223"$h".tif" \
+    -X "./raw/sfav2_CONUS_24h_"$i"0224"$h".tif" \
+    -Y "./raw/sfav2_CONUS_24h_"$i"0225"$h".tif" \
+    -Z "./raw/sfav2_CONUS_24h_"$i"0226"$h".tif" \
+    --outfile=./tmp/"$i"aggregate.tmp.tif \
+    --calc="A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+U+V+W+X+Y+Z" \
+    --NoDataValue=0
+
+  if [ -f "./raw/sfav2_CONUS_24h_"$i"0229"$h".tif" ]; then
+    gdal_calc.py \
+      -A "./tmp/"$i"aggregate.tmp.tif"  \
+      -B "./raw/sfav2_CONUS_24h_"$i"0227"$h".tif" \
+      -C "./raw/sfav2_CONUS_24h_"$i"0228"$h".tif" \
+      -D "./raw/sfav2_CONUS_24h_"$i"0229"$h".tif" \
+      --outfile=./tmp/"$i"aggregate.tmp.tif \
+      --calc="A+B+C" \
+      --NoDataValue=0
+  else
+    gdal_calc.py \
+      -A "./tmp/"$i"aggregate.tmp.tif"  \
+      -B "./raw/sfav2_CONUS_24h_"$i"0227"$h".tif" \
+      -C "./raw/sfav2_CONUS_24h_"$i"0228"$h".tif" \
+      --outfile=./tmp/"$i"aggregate.tmp.tif \
+      --calc="A+B+C" \
+      --NoDataValue=0 
+  fi
+
+  gdalwarp -srcnodata "3.40282346600000016e+38" -dstnodata "0" ./tmp/"$i"aggregate.tmp.tif ./tmp/"$i"aggregate.tmp.tif
+done
+
 gdal_calc.py \
-  -A ./raw/sfav2_CONUS_24h_2019020100.tif \
-  -B ./raw/sfav2_CONUS_24h_2019020200.tif \
-  -C ./raw/sfav2_CONUS_24h_2019020300.tif \
-  -D ./raw/sfav2_CONUS_24h_2019020400.tif \
-  -E ./raw/sfav2_CONUS_24h_2019020500.tif \
-  -F ./raw/sfav2_CONUS_24h_2019020600.tif \
-  -G ./raw/sfav2_CONUS_24h_2019020700.tif \
-  -H ./raw/sfav2_CONUS_24h_2019020800.tif \
-  -I ./raw/sfav2_CONUS_24h_2019020900.tif \
-  -J ./raw/sfav2_CONUS_24h_2019021000.tif \
-  -K ./raw/sfav2_CONUS_24h_2019021100.tif \
-  -L ./raw/sfav2_CONUS_24h_2019021200.tif \
-  -M ./raw/sfav2_CONUS_24h_2019021300.tif \
-  -N ./raw/sfav2_CONUS_24h_2019021400.tif \
-  -O ./raw/sfav2_CONUS_24h_2019021500.tif \
-  -P ./raw/sfav2_CONUS_24h_2019021600.tif \
-  -Q ./raw/sfav2_CONUS_24h_2019021700.tif \
-  -R ./raw/sfav2_CONUS_24h_2019021800.tif \
-  -S ./raw/sfav2_CONUS_24h_2019021900.tif \
-  -T ./raw/sfav2_CONUS_24h_2019022000.tif \
-  -U ./raw/sfav2_CONUS_24h_2019022100.tif \
-  -V ./raw/sfav2_CONUS_24h_2019022200.tif \
-  --outfile=./tmp/aggregate.tmp.tif \
-  --calc="A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+U+V" \
-  --NoDataValue=0 &&
-
-# Same for the rest. Splitting this up because months have more than 26 days.
-gdal_calc.py \
-  -A ./tmp/aggregate.tmp.tif \
-  -B ./raw/sfav2_CONUS_24h_2019022300.tif \
-  --outfile=./tmp/aggregate.tmp.tif \
-  --calc="A+B" \
-  --NoDataValue=0 &&
-
-# Just in case we need it later
-# gdal_calc.py \
-#   -A ./tmp/aggregate.tmp.tif \
-#   --outfile=./tmp/aggregate.tmp.tif \
-#   --calc="A*(A>=30)" \
-#   --NoDataValue=0 &&
-
-# Fixes weird nodata issues
-gdalwarp -srcnodata "3.40282346600000016e+38" -dstnodata "0" ./tmp/aggregate.tmp.tif ./tmp/aggregate.tif &&
-rm ./tmp/aggregate.tmp.tif
+  -A "./tmp/2018aggregate.tmp.tif"  \
+  -B "./tmp/2017aggregate.tmp.tif"  \
+  --outfile=./tmp/5year_aggregate.tif \
+  --calc="(A+B)/2" \
+  --NoDataValue=0   
