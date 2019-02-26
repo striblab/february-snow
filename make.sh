@@ -20,10 +20,9 @@ echo 'Step 5 of 7: Binning pixels into vectors (this takes a while) ...' && \
 python ./_bin.py && \
 
 echo 'Step 6 of 7: Splitting up snow grids ...' && \
-mapshaper ./final/snow-grid-full.json -quiet -filter 'max != null' -o ./final/snow-grid-nonull.json && \
-mapshaper ./final/snow-grid-nonull.json -quiet -filter 'max < 30' -o ./final/less-than-msp.json && \
-mapshaper ./final/snow-grid-nonull.json -quiet -filter 'max >= 30' -o ./final/more-than-msp.json && \
+mapshaper ./final/snow-grid-full-2019.json -quiet -filter 'max != null' -o ./final/snow-grid-nonull-2019.json && \
+mapshaper ./final/snow-grid-nonull-2019.json -each 'pct_msp=max/30*100' -o ./final/pct-msp-2019.json && \
+
 
 echo 'Step 7 of 7: Making tiles ...' && \
-tippecanoe -o ./final/more-than-msp.mbtiles --generate-ids ./final/more-than-msp.json &&
-tippecanoe -o ./final/less-than-msp.mbtiles --generate-ids ./final/less-than-msp.json
+tippecanoe -o ./final/pct-msp-2019.mbtiles --generate-ids ./final/pct-msp-2019.json

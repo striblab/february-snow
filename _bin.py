@@ -18,5 +18,5 @@ with fiona.open('./hexes/us-grid.shp') as src:
 
     result = {"type": "FeatureCollection", "features": stats}
 
-    with open('./final/snow-grid-full.json', 'w') as f:
+    with open('./final/snow-grid-full-2019.json', 'w') as f:
         json.dump(result, f)

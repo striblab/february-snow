@@ -35,8 +35,10 @@ gdal_calc.py \
 gdal_calc.py \
   -A ./tmp/aggregate.tmp.tif \
   -B ./raw/sfav2_CONUS_24h_2019022300.tif \
+  -C ./raw/sfav2_CONUS_24h_2019022400.tif \
+  -D ./raw/sfav2_CONUS_24h_2019022500.tif \
   --outfile=./tmp/aggregate.tmp.tif \
-  --calc="A+B" \
+  --calc="A+B+C+D" \
   --NoDataValue=0 &&
 
 # Just in case we need it later
