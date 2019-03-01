@@ -21,7 +21,7 @@ python ./_bin.py && \
 
 echo 'Step 6 of 7: Splitting up snow grids ...' && \
 mapshaper ./final/snow-grid-full-2019.json -quiet -filter 'max != null' -o ./final/snow-grid-nonull-2019.json && \
-mapshaper ./final/snow-grid-nonull-2019.json -each 'pct_msp=max/37*100' -o ./final/pct-msp-2019.json && \
+mapshaper ./final/snow-grid-nonull-2019.json -each 'pct_msp=max/39*100' -o ./final/pct-msp-2019.json && \
 
 
 echo 'Step 7 of 7: Making tiles ...' && \
